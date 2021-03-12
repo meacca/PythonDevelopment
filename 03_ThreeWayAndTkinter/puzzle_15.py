@@ -1,32 +1,37 @@
 import tkinter as tk
+import random
 
 
-def generate_dummy_number_buttons(window):
-    for i in range(15):
+def generate_random_number_buttons():
+    random_empty = random.randint(0, 15)
+    random_seq = list(range(0, 15))
+    random.shuffle(random_seq)
+    cur_elem = 0
+    for i in range(16):
         row = i // 4 + 1
         column = i % 4
-        text = str(i + 1)
-        new_number = tk.Button(window, text=text)
-        new_number.grid(row=row, column=column, sticky="NEWS")
+        if i != random_empty:
+            number_buttons[random_seq[cur_elem]].grid(row=row, column=column, sticky="NEWS")
+            cur_elem += 1
 
 
-def configure_row_columns(window):
+def configure_row_columns():
     for column in range(0, 4):
-        window.columnconfigure(column, weight=1)
+        main_window.columnconfigure(column, weight=1)
     for row in range(1, 5):
-        window.rowconfigure(row, weight=1)
-
+        main_window.rowconfigure(row, weight=1)
 
 
 main_window = tk.Tk()
+number_buttons = [tk.Button(main_window, text=str(i+1)) for i in range(15)]
 
-new_button = tk.Button(main_window, text="New")
+generate_random_number_buttons()
+configure_row_columns()
+
+new_button = tk.Button(main_window, text="New", command=generate_random_number_buttons)
 new_button.grid(row=0, column=0, columnspan=2, sticky="N")
-exit_button = tk.Button(main_window, text='Exit')
+exit_button = tk.Button(main_window, text='Exit', command=main_window.destroy)
 exit_button.grid(row=0, column=2, columnspan=2, sticky="N")
-
-generate_dummy_number_buttons(main_window)
-configure_row_columns(main_window)
 
 main_window.title("15")
 main_window.mainloop()
