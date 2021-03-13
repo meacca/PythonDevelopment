@@ -9,13 +9,23 @@ def generate_random_number_buttons():
     random_seq = list(range(0, 15))
     random.shuffle(random_seq)
     cur_elem = 0
+    N = 0
     for i in range(16):
         row = i // 4 + 1
         column = i % 4
         if i != random_empty:
             number_buttons[random_seq[cur_elem]].grid(row=row, column=column, sticky="NEWS")
+            N += sum([True for elem in random_seq[cur_elem+1:] if elem < random_seq[cur_elem]])
             cur_elem += 1
+        else:
+            N += row
     current_empty = random_empty
+    return N % 2 == 0
+
+
+def generate_correct_random_number_buttons():
+    while not generate_random_number_buttons():
+        pass
 
 
 def configure_row_columns():
@@ -47,7 +57,7 @@ def number_click_action(number_idx):
             current_empty = (cur_row - 1) * 4 + cur_column % 4
         if check_win():
             messagebox.showinfo(title="Win message", message="You win!")
-            generate_random_number_buttons()
+            generate_correct_random_number_buttons()
     return custom_func
 
 
@@ -55,10 +65,10 @@ main_window = tk.Tk()
 current_empty = 0
 number_buttons = [tk.Button(main_window, text=str(i+1), command=number_click_action(i)) for i in range(15)]
 
-generate_random_number_buttons()
+generate_correct_random_number_buttons()
 configure_row_columns()
 
-new_button = tk.Button(main_window, text="New", command=generate_random_number_buttons)
+new_button = tk.Button(main_window, text="New", command=generate_correct_random_number_buttons)
 new_button.grid(row=0, column=0, columnspan=2, sticky="N")
 exit_button = tk.Button(main_window, text='Exit', command=main_window.destroy)
 exit_button.grid(row=0, column=2, columnspan=2, sticky="N")
