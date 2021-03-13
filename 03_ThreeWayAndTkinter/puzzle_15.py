@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import random
 
 
@@ -24,6 +25,17 @@ def configure_row_columns():
         main_window.rowconfigure(row, weight=1)
 
 
+def check_win():
+    if current_empty != 15:
+        return False
+    for i in range(15):
+        cur_row = number_buttons[i].grid_info()["row"]
+        cur_column = number_buttons[i].grid_info()["column"]
+        if ((cur_row - 1) * 4 + cur_column) != i:
+            return False
+    return True
+
+
 def number_click_action(number_idx):
     def custom_func():
         global current_empty
@@ -33,6 +45,9 @@ def number_click_action(number_idx):
         if abs(cur_row - empty_row) + abs(cur_column - empty_column) <= 1:
             number_buttons[number_idx].grid(row=empty_row, column=empty_column, sticky="NEWS")
             current_empty = (cur_row - 1) * 4 + cur_column % 4
+        if check_win():
+            messagebox.showinfo(title="Win message", message="You win!")
+            generate_random_number_buttons()
     return custom_func
 
 
